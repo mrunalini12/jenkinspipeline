@@ -3,7 +3,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building...'
+                echo 'Building Docker image...'
+                sh 'docker build -t jenkins-cicd-app..'
                 // Add build commands here
             }
         }
