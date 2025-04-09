@@ -18,8 +18,9 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo 'Deploying...'
-                // Add deployment commands here
+                echo 'Deploying Docker container...'
+                sh 'docker rm -f jenkins-cicd-container || true'
+                sh 'docker run -d -p 8081:80 --name jenkins-cicd-container jenkins-cicd-app'
             }
         }
     }
