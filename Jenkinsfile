@@ -1,19 +1,21 @@
 pipeline {
     agent any
+
     stages {
         stage('Build') {
             steps {
                 echo 'Building Docker image...'
                 sh 'docker build -t jenkins-cicd-app .'
-                // Add build commands here
             }
         }
+
         stage('Test') {
             steps {
-                echo 'Testing...'
-                // Add test commands here
+                echo 'Running basic test...'
+                sh 'test -f index.html && echo "✅ index.html exists!" || echo "❌ index.html missing!"'
             }
         }
+
         stage('Deploy') {
             steps {
                 echo 'Deploying...'
