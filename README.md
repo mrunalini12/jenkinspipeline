@@ -1,87 +1,89 @@
-CI/CD Pipeline using Jenkins, Docker, and GitHub Webhook
-This project sets up a CI/CD pipeline using Jenkins, Docker, and GitHub Webhooks. It builds a basic HTML app, tests it, builds a Docker image, and deploys it as a running container. The Jenkins pipeline is automatically triggered using GitHub webhooks.
+# Jenkins CI/CD Pipeline with Docker
 
-🔧 Tools & Technologies
-Jenkins – For automation and pipeline creation
+This project demonstrates a complete CI/CD pipeline using Jenkins, GitHub, Docker, and basic HTML content. The pipeline automates the build, test, and deploy stages, and finally runs the Docker container.
 
-Docker – For containerizing the application
+## 🔧 Tools Used
 
-GitHub – Source code and webhook triggering
+- **Jenkins**
+- **GitHub**
+- **Docker**
+- **Ngrok** (for webhook testing)
 
-GitHub Webhook – For auto-triggering Jenkins on every push
+---
 
-Nginx – Base image for serving static files
+## 📁 Repository Structure
 
-📁 Files in the Project
-index.html – Simple HTML file to serve
+├── Dockerfile ├── Jenkinsfile └── index.html
 
-Dockerfile – Builds a Docker image with Nginx and copies the HTML
 
-Jenkinsfile – Contains CI/CD pipeline logic
+- `index.html`: A sample frontend file for deployment.
+- `Dockerfile`: Builds a simple NGINX-based container to serve the HTML.
+- `Jenkinsfile`: Contains the pipeline script with build, test, and deploy stages.
 
-📜 Jenkinsfile Pipeline Stages
-groovy
+---
+
+## ⚙️ Jenkins Pipeline Stages
+
+### 1. **Build**
+- Creates a Docker image using the `Dockerfile`.
+
+### 2. **Test**
+- Echo test stage (can be replaced with actual tests).
+
+### 3. **Deploy**
+- Runs the container locally to serve the application.
+- Docker image is optionally pushed to Docker Hub.
+
+---
+
+## 🐳 Docker Hub
+
+Image is pushed to [Docker Hub](https://hub.docker.com/u/mrunalini01):
+
+```bash
+docker login
+docker tag jenkins-cicd-app mrunalini01/ci-cd-node-app
+docker push mrunalini01/ci-cd-node-app
+
+🔗 GitHub Webhook Integration
+Webhook configured to trigger Jenkins on every push.
+
+Used Ngrok to expose Jenkins running locally:
+
+yaml
 Copy
 Edit
-pipeline {
-    agent any
-    stages {
-        stage('Build') {
-            steps {
-                echo 'Building...'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing...'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sh 'docker build -t jenkins-cicd-app .'
-                sh 'docker run -d -p 8080:80 jenkins-cicd-app'
-            }
-        }
-    }
-}
-🐳 Dockerfile
-Dockerfile
+ngrok http 8080
+Webhook URL added to GitHub:
+
+perl
 Copy
 Edit
-FROM nginx:alpine
-COPY index.html /usr/share/nginx/html/index.html
-This Dockerfile uses an Alpine-based Nginx image and serves a static HTML page.
+http://<your-ngrok-url>/github-webhook/
+Note: Jenkins trigger via webhook was tested but skipped in final setup due to network/firewall issues. Manual build works fine.
 
-🔔 GitHub Webhook Setup
-Go to your GitHub repo → Settings → Webhooks
+✅ How to Run
+Clone the repo.
 
-Click “Add Webhook” and enter:
+Setup Jenkins job with GitHub repo.
 
-Payload URL: http://<your-public-ip>:8080/github-webhook/
+Add Jenkinsfile path.
 
-Content type: application/json
+Run the job manually or configure webhook.
 
-Event: Just the Push event
+View the app on http://localhost:8080.
 
-Save the webhook
+📦 Output
+Docker container running NGINX serving index.html.
 
-⚙️ Jenkins Configuration
-In your Jenkins job:
+Image pushed to Docker Hub.
 
-Under Build Triggers, check: ✅ GitHub hook trigger for GITScm polling
+Logs in Jenkins for all stages (build, test, deploy).
 
-Make sure Jenkins is reachable via the public IP used in the webhook.
+👩‍💻 Author
+Mrunalini
+GitHub: @mrunalini12
+Docker Hub: mrunalini01
 
-🐋 (Optional) Push Docker Image to Docker Hub
-bash
-Copy
-Edit
-docker tag jenkins-cicd-app mrunalini01/jenkins-cicd-app
-docker push mrunalini01/jenkins-cicd-app
-✅ Final Result
-Jenkins pipeline runs automatically on GitHub push
 
-Docker image is built and deployed
-
-App is served at http://<your-ip>:8080 using Nginx
 
